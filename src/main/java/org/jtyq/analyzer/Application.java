@@ -15,7 +15,7 @@ public class Application {
         try {
             this.processor = new Processor();
             String analyzerClassName = processor.getPropertiesValue().getConfigValue(analyzerClassNameKey);
-            String[] classes = analyzerClassName.split(",");
+            String[] classes = analyzerClassName.split(";");
             for (String s : classes) {
                 Class ac = Class.forName(s);
                 Observer analyzer = (Observer) ac.newInstance();

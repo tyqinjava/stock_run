@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class FileLog implements Log {
 
-    private static final String logfile = "C:\\Users\\TYQ\\Desktop\\log.txt";
+    private static final String logfile = "./log.txt";
 
     private static final String INFO_FORMAT = "【级别】：信息，【日期】：%s,【内容】：%s ";
 

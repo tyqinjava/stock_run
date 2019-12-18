@@ -20,10 +20,9 @@ public class GUIShowObserver implements Observer {
 
     public GUIShowObserver(){
         jFrame = new JFrame();
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setBounds(0,900,260,260);
         jLabel = new JLabel();
-        Font font = new Font("宋体",Font.PLAIN,12);
+        Font font = new Font("宋体",Font.PLAIN,14);
         jLabel.setFont(font);
         JPanel panel = new JPanel();
         panel.add(jLabel);

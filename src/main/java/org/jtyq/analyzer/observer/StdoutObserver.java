@@ -13,12 +13,14 @@ public class StdoutObserver implements Observer {
 
     private static final String format2= "%s;%s;%s;%s;%s\n";
 
+    private static final String format3 = "%s;%s;%s;%s\n";
+
     public void update(Observable o, Object arg) {
         StockListHandler stockListHandler = (StockListHandler) o;
         List<Stock> stockList = stockListHandler.getStockList();
         StringBuilder sb = new StringBuilder();
         for(Stock stock:stockList) {
-            sb.append(String.format(format2,stock.getCode(),stock.getName(),stock.getCurrentPrice(),stock.getIncrement(),stock.getGain()));
+            sb.append(String.format(format3,stock.getName(),stock.getCurrentPrice(),stock.getIncrement(),stock.getGain()));
         }
         System.out.println(sb.toString());
     }
