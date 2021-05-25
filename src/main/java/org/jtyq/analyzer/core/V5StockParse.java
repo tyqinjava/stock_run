@@ -4,15 +4,12 @@ import org.jtyq.analyzer.bean.Stock;
 
 public class V5StockParse implements StockParse {
 
-    private Stock stock;
-
-    public V5StockParse(Stock stock) {
-        this.stock = stock;
+    public V5StockParse() {
     }
 
     @Override
-    public void parse(String json) {
+    public Stock parse(String json) {
         System.out.println(json);
-
+        return null;
     }
 }

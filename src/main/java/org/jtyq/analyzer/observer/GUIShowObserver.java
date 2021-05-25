@@ -1,7 +1,6 @@
 package org.jtyq.analyzer.observer;
 
 import org.jtyq.analyzer.bean.Stock;
-import org.jtyq.analyzer.core.StockListHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,8 +35,7 @@ public class GUIShowObserver implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        StockListHandler stockListHandler = (StockListHandler) o;
-        List<Stock> stockList = stockListHandler.getStockList();
+        List<Stock> stockList = (List<Stock>) arg;
         StringBuilder sb = new StringBuilder();
         sb.append("<html>");
         sb.append("<body>");

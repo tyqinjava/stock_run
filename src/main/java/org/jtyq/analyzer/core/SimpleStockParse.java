@@ -9,13 +9,7 @@ import java.util.*;
 
 public class SimpleStockParse implements StockParse {
 
-    private Stock stock;
-
-    public SimpleStockParse(Stock stock){
-        this.stock = stock;
-    }
-
-    public void parse(String json) {
+    public Stock parse(String json) {
         Map<String, Object> rs = (Map<String, Object>) JSON.parse(json);
         Set<String> s = rs.keySet();
         String ks = null;
@@ -23,7 +17,7 @@ public class SimpleStockParse implements StockParse {
             ks = key;
         }
         List<String> ls = (List<String>) rs.get(ks);
-        String price =  ls.get(0);
+        String price = ls.get(0);
         String increment = ls.get(1);
         String gain = ls.get(2);
         String date = ls.get(3);
@@ -35,10 +29,12 @@ public class SimpleStockParse implements StockParse {
             e.printStackTrace();
         }
         Long timestamp = System.currentTimeMillis();
-        this.stock.setCurrentPrice(price);
-        this.stock.setIncrement(increment);
-        this.stock.setResultDate(resultDate);
-        this.stock.setTimeStamp(timestamp);
-        this.stock.setGain(gain);
+        Stock stock = new Stock();
+        stock.setCurrentPrice(price);
+        stock.setIncrement(increment);
+        stock.setResultDate(resultDate);
+        stock.setTimeStamp(timestamp);
+        stock.setGain(gain);
+        return stock;
     }
 }

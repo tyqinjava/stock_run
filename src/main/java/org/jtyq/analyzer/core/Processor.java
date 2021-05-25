@@ -1,51 +1,46 @@
 package org.jtyq.analyzer.core;
 
-import org.jtyq.analyzer.bean.PropertiesValue;
+import org.jtyq.analyzer.bean.Environment;
 import org.jtyq.analyzer.task.ProcessTask;
 
 import java.util.Observer;
 import java.util.Timer;
 
-public class Processor extends Timer {
+public class Processor {
 
-    private StockListHandler stockListHandler;
-    private PropertiesValue propertiesValue;
+    private Handler handler;
 
-    public Processor() {
-        this.propertiesValue = new PropertiesValue();
-        this.stockListHandler = new StockListHandler(propertiesValue);
+    private Environment environment;
+
+    private Timer timer;
+
+    public Processor(Environment environment) {
+        this.environment = environment;
+        this.handler = new Handler();
+        this.timer = new Timer();
     }
 
-    public StockListHandler getStockListHandler() {
-        return stockListHandler;
+    public Handler getHandler() {
+        return handler;
     }
 
-
-    public void setStockListHandler(StockListHandler stockListHandler) {
-        this.stockListHandler = stockListHandler;
+    public void setHandler(Handler handler) {
+        this.handler = handler;
     }
 
-
-    public void setPropertiesValue(PropertiesValue propertiesValue) {
-        this.propertiesValue = propertiesValue;
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 
-
-    public PropertiesValue getPropertiesValue() {
-        return propertiesValue;
+    public Environment getEnvironment() {
+        return environment;
     }
 
     public void run() {
-        schedule(new ProcessTask(stockListHandler)
-                , propertiesValue.getTimeDelay(), propertiesValue.getTimePeriod());
-//        if(stockAnalyzer == null){
-//            throw new RuntimeException("stockAnalyzer is null");
-//        }
-//        stockAnalyzer.setStockListHandler(stockListHandler);
-//        stockAnalyzer.analyze();
+        this.timer.schedule(new ProcessTask(environment, handler), environment.getTimeDelay(), environment.getTimePeriod());
     }
 
     public void addObserver(Observer analyzer) {
-        this.stockListHandler.addObserver(analyzer);
+        this.handler.addObserver(analyzer);
     }
 }

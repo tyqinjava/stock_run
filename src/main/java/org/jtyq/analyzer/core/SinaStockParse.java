@@ -6,14 +6,8 @@ import java.util.Date;
 
 public class SinaStockParse implements StockParse {
 
-    private Stock stock;
-
-    public SinaStockParse(Stock stock) {
-        this.stock = stock;
-    }
-
     @Override
-    public void parse(String json) {
+    public Stock parse(String json) {
         String sl = json.substring(json.indexOf("\"")+1,json.lastIndexOf("\""));
         String[] its = sl.split(",");
 
@@ -23,10 +17,12 @@ public class SinaStockParse implements StockParse {
         String increment = its[3];
 
         Long timestamp = System.currentTimeMillis();
-        this.stock.setCurrentPrice(price);
-        this.stock.setIncrement(increment);
-        this.stock.setResultDate(new Date());
-        this.stock.setTimeStamp(timestamp);
-        this.stock.setGain(gain);
+        Stock stock = new Stock();
+        stock.setCurrentPrice(price);
+        stock.setIncrement(increment);
+        stock.setResultDate(new Date());
+        stock.setTimeStamp(timestamp);
+        stock.setGain(gain);
+        return stock;
     }
 }

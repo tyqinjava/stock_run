@@ -65,13 +65,13 @@ public class HttpRequestClient {
     private static final long DEFAULT_IDLE_CONNECTION_TIME = 2 * 60 * 1000;
 
 
-    private static HttpClientConnectionManager connectionManager = createHttpClientConnectionManager() ;
+    private static HttpClientConnectionManager connectionManager = createHttpClientConnectionManager();
 
     private RequestConfig requestConfig;
 
     private CloseableHttpClient client;
 
-    public HttpRequestClient(){
+    public HttpRequestClient() {
         RequestConfig.Builder reqConfigBuilder = RequestConfig.custom();
         reqConfigBuilder.setConnectionRequestTimeout(DEFAULT_CONNECT_REQUEST_TIMEOUT);
         reqConfigBuilder.setSocketTimeout(DEFAULT_SOCKET_TIMEOUT);
@@ -91,6 +91,7 @@ public class HttpRequestClient {
                 .setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36")
                 .build();
     }
+
     private static HttpClientConnectionManager createHttpClientConnectionManager() {
 
         SSLContext sslContext = null;
@@ -123,13 +124,21 @@ public class HttpRequestClient {
 
     /**
      * 发送get请求
+     *
      * @param urlPrefix 接口调用前缀
      * @param path      接口调用后缀
      * @param params    URL参数
      * @return 返回json格式的字符串
      */
-    public String sendHttpGet(String urlPrefix,String path,Map<String,String> params) {
-        String url = addUrlParameters(urlPrefix,path,params);
+    public String sendHttpGet(String urlPrefix, String path, Map<String, String> params) {
+        String url = addUrlParameters(urlPrefix, path, params);
+//        logger.info("请求调用地址："+url);
+        HttpGet get = new HttpGet(url);
+        get.setConfig(requestConfig);
+        return execute(get);
+    }
+
+    public String sendHttpGet(String url) {
 //        logger.info("请求调用地址："+url);
         HttpGet get = new HttpGet(url);
         get.setConfig(requestConfig);
@@ -138,15 +147,16 @@ public class HttpRequestClient {
 
     /**
      * 拼接url参数
-     * @param urlPrefix 接口调用前缀
-     * @param path 接口调用后缀
+     *
+     * @param urlPrefix   接口调用前缀
+     * @param path        接口调用后缀
      * @param queryParams 查询参数
      * @return URI字符串
      */
-    private String addUrlParameters(String urlPrefix,String path,Map<String,String> queryParams){
+    private String addUrlParameters(String urlPrefix, String path, Map<String, String> queryParams) {
         StringURIBuilder urlBuilder = new StringURIBuilder(urlPrefix);
         urlBuilder.appendPath(path);
-        if(queryParams!=null && !queryParams.isEmpty()) {
+        if (queryParams != null && !queryParams.isEmpty()) {
             Set<Map.Entry<String, String>> queryEntries = queryParams.entrySet();
             for (Map.Entry<String, String> entry : queryEntries) {
                 String key = entry.getKey();
@@ -159,25 +169,26 @@ public class HttpRequestClient {
 
     /**
      * 上传单个文件
-     * @param urlPrefix 接口调用前缀
-     * @param path 接口调用后缀
+     *
+     * @param urlPrefix   接口调用前缀
+     * @param path        接口调用后缀
      * @param queryParams 查询参数
-     * @param params 表单域参数
-     * @param file 文件
-     * @param fileType 文件MIME类型
+     * @param params      表单域参数
+     * @param file        文件
+     * @param fileType    文件MIME类型
      * @return 返回json格式的字符串
      */
-    public String uploadSingleFile(String urlPrefix, String path, Map<String,String> queryParams,Map<String,String> params, File file,ContentType fileType){
-            String url  = addUrlParameters(urlPrefix,path,queryParams);
+    public String uploadSingleFile(String urlPrefix, String path, Map<String, String> queryParams, Map<String, String> params, File file, ContentType fileType) {
+        String url = addUrlParameters(urlPrefix, path, queryParams);
 //        logger.info("请求调用地址："+url);
         HttpPost post = new HttpPost(url);
         MultipartEntityBuilder meb = MultipartEntityBuilder.create();
         FileBody fileBody = new FileBody(file, fileType);
         Set<Map.Entry<String, String>> entries = params.entrySet();
-        for(Map.Entry<String,String> entry:entries){
-            meb.addTextBody(entry.getKey(),entry.getValue());
+        for (Map.Entry<String, String> entry : entries) {
+            meb.addTextBody(entry.getKey(), entry.getValue());
         }
-        meb.addPart("file",fileBody);
+        meb.addPart("file", fileBody);
         HttpEntity entity = meb.build();
         post.setEntity(entity);
         post.setConfig(this.requestConfig);
@@ -186,14 +197,15 @@ public class HttpRequestClient {
 
     /**
      * 发送POST请求
-     * @param urlPrefix 接口调用前缀
-     * @param path 接口调用后缀
+     *
+     * @param urlPrefix  接口调用前缀
+     * @param path       接口调用后缀
      * @param queryParam 查询参数
-     * @param params 表单域参数
+     * @param params     表单域参数
      * @return 返回json格式的字符串
      */
-    public String sendHttpPost(String urlPrefix,String path,Map<String,String> queryParam,Map<String,String> params){
-        String url = addUrlParameters(urlPrefix,path,queryParam);
+    public String sendHttpPost(String urlPrefix, String path, Map<String, String> queryParam, Map<String, String> params) {
+        String url = addUrlParameters(urlPrefix, path, queryParam);
 //        logger.info("请求调用地址："+url);
         List<NameValuePair> pairs = null;
         if (params != null && !params.isEmpty()) {
@@ -206,7 +218,7 @@ public class HttpRequestClient {
         httpPost.setConfig(requestConfig);
         if (pairs != null && pairs.size() > 0) {
             try {
-                httpPost.setEntity(new UrlEncodedFormEntity(pairs,"UTF-8"));
+                httpPost.setEntity(new UrlEncodedFormEntity(pairs, "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -216,14 +228,15 @@ public class HttpRequestClient {
 
     /**
      * 执行方法
+     *
      * @param req
      * @return 返回json格式的字符串
      */
-    private String execute(HttpUriRequest req){
+    private String execute(HttpUriRequest req) {
         HttpResponse response = null;
         String result = null;
         try {
-            response= client.execute(req);
+            response = client.execute(req);
             HttpEntity resultEntity = response.getEntity();
             result = EntityUtils.toString(resultEntity);
         } catch (IOException e) {
@@ -231,8 +244,6 @@ public class HttpRequestClient {
         }
         return result;
     }
-
-
 
 
 }

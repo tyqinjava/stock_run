@@ -226,7 +226,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.jtyq.analyzer.Application</mainClass>
+                            <mainClass>org.jtyq.analyzer.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

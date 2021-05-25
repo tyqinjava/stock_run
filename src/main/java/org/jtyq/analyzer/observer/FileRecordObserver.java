@@ -3,7 +3,6 @@ package org.jtyq.analyzer.observer;
 import org.jtyq.analyzer.bean.Stock;
 import org.jtyq.analyzer.core.FileLog;
 import org.jtyq.analyzer.core.Log;
-import org.jtyq.analyzer.core.StockListHandler;
 
 import java.io.*;
 import java.net.URL;
@@ -69,8 +68,7 @@ public class FileRecordObserver implements Observer {
     }
 
     public void update(Observable o, Object arg) {
-        StockListHandler stockListHandler = (StockListHandler)o;
-        List<Stock> stockList = stockListHandler.getStockList();
+        List<Stock> stockList = (List<Stock>) arg;
         Stock stock = findOO1Stock(stockList);
         if(stock != null) {
             double gain = Double.parseDouble(stock.getGain());
